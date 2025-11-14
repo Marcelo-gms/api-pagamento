@@ -10,7 +10,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-require("./src/webhook/webHook.js");
+// require("./src/webhook/webHook.js");
 const port = process.env.PORT || 3000;
 
 const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MODE } = process.env;
