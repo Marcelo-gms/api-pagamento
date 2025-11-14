@@ -44,7 +44,7 @@ async function getData(table, reference_id) {
       [reference_id]
     );
 
-    return result;
+    return result[0];
   } catch (error) {
     console.log(error);
     throw new Error(`Erro ao inserir dados na tabela ${table}`);

@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const apiPayment = require("./helpers/axios");
 const crypto = require("node:crypto");
-const moment = require("moment");
 const { insert, getData } = require("./mysql/db.js");
 const nodemailer = require("nodemailer");
 const path = require("node:path");
@@ -14,8 +13,10 @@ app.use(cors());
 require("./webhook/webHook");
 const port = process.env.PORT || 3000;
 
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MODE } = process.env;
+
 app.get("/", (req, res) => {
-  return res.json({ msg: "Vai se fuder!!" });
+  return res.status(200).json({ msg: "Vai se fuder!!" });
 });
 
 app.post("/payment", async (req, res) => {
@@ -61,47 +62,46 @@ app.post("/confirm-payment", async (req, res) => {
 
     const res = await getData("payments", externalReference);
 
-    await sendEmail(res);
+    await sendEmail(res?.email);
     return res.status(200);
   } catch (error) {
     return res.status(400).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
-app.post("/users", async (req, res) => {
+async function sendEmail(email) {
   try {
-    const { name, email, password } = req.body;
-    const result = await insert("users", { name, email, password });
-
-    return res.status(201).json({ result: result });
-  } catch (error) {
-    console.log("Erro?:", error);
-    return res.status(403).json({ msg: "erro ao criar user", error });
-  }
-});
-
-async function sendEmail({ email }) {
-  try {
-    // Create a test account or replace with real credentials.
+    if (!email) return;
     const transporter = nodemailer.createTransport({
-      host: "localhost",
-      port: 1025,
-      secure: false,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: MODE == "prod" ? true : false,
 
-      // auth: {
-      //   user: "maddison53@ethereal.email",
-      //   pass: "jn7jnAPss4f63QBp6D",
-      // },
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASS,
+      },
     });
 
-    // Wrap in an async IIFE so we can use await.
-
     const info = await transporter.sendMail({
-      from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
-      to: "marcelo@gmail.com",
-      subject: "Hello ✔",
-      text: "Hello world?", // plain‑text body
-      html: "<b>Hello world?</b>",
+      from: '"Portal Conhecimento" <portalconhecimento@gmail.com>',
+      to: email,
+      subject: "Seu Ebook Chegou!",
+      text: "Tudo certo?", // plain‑text body
+      html: `
+          <div style="font-family: Arial, Helvetica, sans-serif;">
+        <p
+            style="text-align: center; font-size: 30px; font-weight: bold;color: white;background-color: rgb(231, 16, 185);padding: 20px 20px;">
+            A equipe Portal Conhecimento agradece sua compra!
+        </p>
+        <div style="margin-top: 20%;">
+            <p style="font-size: 20px; font-weight: bold;">Dúvidas e Suporte via Whatsapp</p>
+            <p style="font-size: 20px; font-weight: bold;">(69) 992643629</p>
+
+        </div>
+    </div>
+
+      `,
       attachments: [
         {
           filename: "Aperta_e_solta.pdf",
@@ -110,13 +110,15 @@ async function sendEmail({ email }) {
       ],
     });
 
-    console.log("Message sent:", info.messageId);
-
     return;
   } catch (error) {
     console.log(error);
     console.log("Erro!");
   }
 }
+
+app.use((req, res) => {
+  return res.status(500).json({ msg: "Nada por aqui!" });
+});
 
 app.listen(port, () => console.log("App running!"));
