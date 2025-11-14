@@ -1,16 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const apiPayment = require("./helpers/axios");
+const apiPayment = require("./src/helpers/axios.js");
 const crypto = require("node:crypto");
-const { insert, getData } = require("./mysql/db.js");
+const { insert, getData } = require("./src/mysql/db.js");
 const nodemailer = require("nodemailer");
 const path = require("node:path");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-require("./webhook/webHook");
+require("./src/webhook/webHook.js");
 const port = process.env.PORT || 3000;
 
 const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MODE } = process.env;
