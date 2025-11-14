@@ -105,7 +105,7 @@ async function sendEmail(email) {
       attachments: [
         {
           filename: "Aperta_e_solta.pdf",
-          path: path.join(__dirname, "Aperta_e_solta.pdf"),
+          path: path.join(__dirname, "./src/Aperta_e_solta.pdf"),
         },
       ],
     });
