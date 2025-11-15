@@ -9,7 +9,11 @@ const path = require("node:path");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ origin: "https://portalconhecimento.online" }));
+app.use(
+  cors({
+    origin: ["https://portalconhecimento.online", "https://www.asaas.com"],
+  })
+);
 // require("./src/webhook/webHook.js");
 const port = process.env.PORT || 3000;
 
@@ -29,7 +33,7 @@ app.post("/payment", async (req, res) => {
 
     const { data } = await apiPayment.post("pix/qrCodes/static", {
       addressKey: "90974fc7-a019-4e0b-b603-22971c3bb301",
-      value: Number(24.99),
+      value: Number(1),
       format: "ALL",
       descrition: "Ebook",
       expirationDate: "",
@@ -42,10 +46,10 @@ app.post("/payment", async (req, res) => {
       reference_id: referencId,
     });
 
-    return res.status(200).json({ res: data });
+    return res.statusCode(200).json({ res: data });
   } catch (error) {
     console.log("PQP: ", error);
-    return res.status(400).json({ errorMsg: "Erro ao buscar", error });
+    return res.statusCode(400).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
@@ -54,11 +58,9 @@ app.post("/confirm-payment", async (req, res) => {
     const { payment } = req.body;
     const { status, externalReference, billingType } = payment;
 
-    if (status !== "RECEIVED")
-      return res.statusCode(200).json({ msg: "O status não é aceito!" });
-    if (!externalReference)
-      return res.statusCode(200).json({ msg: "O status não é aceito!" });
-    if (billingType !== "PIX") return;
+    if (status !== "RECEIVED") return res.statusCode(200);
+    if (!externalReference) return res.statusCode(200);
+    if (billingType !== "PIX") return res.statusCode(200);
 
     const resDb = await getData("payments", externalReference);
 
@@ -116,8 +118,8 @@ async function sendEmail(email) {
 
     return;
   } catch (error) {
+    console.log("Erro ao enviar email!!");
     console.log(error);
-    console.log("Erro!");
   }
 }
 
