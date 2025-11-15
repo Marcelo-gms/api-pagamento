@@ -91,7 +91,7 @@ async function sendEmail(reference) {
 
     const info = await transporter.sendMail({
       from: '"Portal Conhecimento" <portalconhecimento@gmail.com>',
-      to: email,
+      to: resDb.email,
       subject: "Seu Ebook Chegou!",
       text: "Tudo certo?", // plain‑text body
       html: `
