@@ -56,13 +56,8 @@ app.post("/payment", async (req, res) => {
 app.post("/confirm-payment", async (req, res) => {
   try {
     const { payment } = req.body;
-    const { status, externalReference, billingType } = payment;
 
-    if (status !== "RECEIVED") return res.status(200);
-    if (!externalReference) return res.status(200);
-    if (billingType !== "PIX") return res.status(200);
-
-    sendEmail(externalReference);
+    sendEmail(payment);
     return res.status(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
@@ -70,9 +65,15 @@ app.post("/confirm-payment", async (req, res) => {
   }
 });
 
-async function sendEmail(reference) {
+async function sendEmail(payment) {
   try {
-    const resDb = await getData("payments", reference);
+    const { status, externalReference, billingType } = payment;
+
+    if (status !== "RECEIVED") return;
+    if (!externalReference) return;
+    if (billingType !== "PIX") return;
+
+    const resDb = await getData("payments", externalReference);
 
     if (!resDb.email) {
       console.log("Email não encontrado!", resDb);
