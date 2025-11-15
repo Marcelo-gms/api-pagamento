@@ -9,7 +9,7 @@ const path = require("node:path");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "https://portalconhecimento.online" }));
 // require("./src/webhook/webHook.js");
 const port = process.env.PORT || 3000;
 
@@ -94,6 +94,8 @@ async function sendEmail(email) {
             style="text-align: center; font-size: 30px; font-weight: bold;color: white;background-color: rgb(231, 16, 185);padding: 20px 20px;">
             A equipe Portal Conhecimento agradece sua compra!
         </p>
+
+        <a href="https://app.box.com/s/q98w27k9n7mtyp19p311numyvsvarisv" style="text-decoration: none;color: rgb(231, 16, 185);font-size: 20px;margin-top: 5%;">Acessar Ebook</a>
         <div style="margin-top: 20%;">
             <p style="font-size: 20px; font-weight: bold;">Dúvidas e Suporte via Whatsapp</p>
             <p style="font-size: 20px; font-weight: bold;">(69) 992643629</p>
@@ -102,12 +104,12 @@ async function sendEmail(email) {
     </div>
 
       `,
-      attachments: [
-        {
-          filename: "Aperta_e_solta.pdf",
-          path: path.join(__dirname, "./src/Aperta_e_solta.pdf"),
-        },
-      ],
+      // attachments: [
+      //   {
+      //     filename: "Aperta_e_solta.pdf",
+      //     path: path.join(__dirname, "./src/Aperta_e_solta.pdf"),
+      //   },
+      // ],
     });
 
     return;
