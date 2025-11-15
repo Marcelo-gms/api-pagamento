@@ -63,9 +63,10 @@ app.post("/confirm-payment", async (req, res) => {
     const res = await getData("payments", externalReference);
 
     await sendEmail(res?.email);
-    return res.status(200);
+    res.status(200);
   } catch (error) {
-    return res.status(400).json({ errorMsg: "Erro ao buscar", error });
+    console.log("Erro ao confirmar pagamento: ", error);
+    return res.status(200).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
