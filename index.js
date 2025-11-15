@@ -29,7 +29,7 @@ app.post("/payment", async (req, res) => {
 
     const { data } = await apiPayment.post("pix/qrCodes/static", {
       addressKey: "547d3c7d-7b19-4de7-88c6-15252ea41adc",
-      value: Number(1),
+      value: Number(24.99),
       format: "ALL",
       descrition: "Ebook",
       expirationDate: "",
