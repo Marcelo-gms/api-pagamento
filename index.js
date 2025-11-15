@@ -53,15 +53,15 @@ app.post("/payment", async (req, res) => {
   }
 });
 
-app.post("/confirm-payment", async (req, res) => {
+app.post("/confirm-payment", (req, res) => {
   try {
     const { payment } = req.body;
 
     sendEmail(payment);
-    return res.status(200);
+    res.status(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
-    return res.status(200).json({ errorMsg: "Erro ao buscar", error });
+    res.status(200);
   }
 });
 
