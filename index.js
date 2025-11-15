@@ -46,10 +46,10 @@ app.post("/payment", async (req, res) => {
       reference_id: referencId,
     });
 
-    return res.statusCode(200).json({ res: data });
+    return res.status(200).json({ res: data });
   } catch (error) {
     console.log("PQP: ", error);
-    return res.statusCode(400).json({ errorMsg: "Erro ao buscar", error });
+    return res.status(400).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
@@ -58,17 +58,18 @@ app.post("/confirm-payment", async (req, res) => {
     const { payment } = req.body;
     const { status, externalReference, billingType } = payment;
 
-    if (status !== "RECEIVED") return res.statusCode(200);
-    if (!externalReference) return res.statusCode(200);
-    if (billingType !== "PIX") return res.statusCode(200);
+    if (status !== "RECEIVED") return res.status(200);
+    if (!externalReference) return res.status(200);
+    if (billingType !== "PIX") return res.status(200);
 
     const resDb = await getData("payments", externalReference);
 
     await sendEmail(resDb?.email);
-    return res.statusCode(200);
+    console.log("Email enviado!", resDb?.email);
+    return res.status(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
-    return res.statusCode(200).json({ errorMsg: "Erro ao buscar", error });
+    return res.status(200).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
