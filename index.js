@@ -76,7 +76,7 @@ async function sendEmail(email) {
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
-      secure: MODE == "prod" ? true : false,
+      secure: false,
 
       auth: {
         user: SMTP_USER,
