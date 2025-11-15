@@ -62,10 +62,7 @@ app.post("/confirm-payment", async (req, res) => {
     if (!externalReference) return res.status(200);
     if (billingType !== "PIX") return res.status(200);
 
-    const resDb = await getData("payments", externalReference);
-
-    await sendEmail(resDb?.email);
-    console.log("Email enviado!", resDb?.email);
+    sendEmail(externalReference);
     return res.status(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
@@ -73,9 +70,14 @@ app.post("/confirm-payment", async (req, res) => {
   }
 });
 
-async function sendEmail(email) {
+async function sendEmail(reference) {
   try {
-    if (!email) return;
+    const resDb = await getData("payments", reference);
+
+    if (!resDb.email) {
+      console.log("Email não encontrado!", resDb);
+      return;
+    }
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
@@ -117,10 +119,13 @@ async function sendEmail(email) {
       // ],
     });
 
+    console.log("Email enviado!", resDb);
+
     return;
   } catch (error) {
     console.log("Erro ao enviar email!!");
     console.log(error);
+    return;
   }
 }
 
