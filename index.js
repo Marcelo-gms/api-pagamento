@@ -55,18 +55,18 @@ app.post("/confirm-payment", async (req, res) => {
     const { status, externalReference, billingType } = payment;
 
     if (status !== "RECEIVED")
-      return res.status(200).json({ msg: "O status não é aceito!" });
+      return res.statusCode(200).json({ msg: "O status não é aceito!" });
     if (!externalReference)
-      return res.status(200).json({ msg: "O status não é aceito!" });
+      return res.statusCode(200).json({ msg: "O status não é aceito!" });
     if (billingType !== "PIX") return;
 
     const resDb = await getData("payments", externalReference);
 
     await sendEmail(resDb?.email);
-    return res.status(200);
+    return res.statusCode(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
-    return res.status(200).json({ errorMsg: "Erro ao buscar", error });
+    return res.statusCode(200).json({ errorMsg: "Erro ao buscar", error });
   }
 });
 
