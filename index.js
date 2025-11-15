@@ -97,14 +97,15 @@ async function sendEmail(email) {
         </p>
 
         <a href="https://app.box.com/s/q98w27k9n7mtyp19p311numyvsvarisv" style="text-decoration: none;color: rgb(231, 16, 185);font-size: 20px;margin-top: 5%;">Acessar Ebook</a>
-        <div style="margin-top: 20%;">
-            <p style="font-size: 20px; font-weight: bold;">Dúvidas e Suporte via Whatsapp</p>
-            <p style="font-size: 20px; font-weight: bold;">(69) 992643629</p>
-
+        <div style="margin-top: 20%; text-align:center">
+            
+         &copy; Portal Conhecimento. Todos os direitos reservados.
         </div>
     </div>
 
       `,
+      // <p style="font-size: 20px; font-weight: bold;">Dúvidas e Suporte via Whatsapp</p>
+      // <p style="font-size: 20px; font-weight: bold;">(69) 992643629</p>
       // attachments: [
       //   {
       //     filename: "Aperta_e_solta.pdf",
