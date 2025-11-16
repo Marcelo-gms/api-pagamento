@@ -55,19 +55,19 @@ app.post("/payment", async (req, res) => {
 
 app.post("/confirm-payment", (req, res) => {
   try {
+    res.status(200).send("ok");
     const { payment } = req.body;
 
     sendEmail(payment);
-    res.status(200);
   } catch (error) {
     console.log("Erro ao confirmar pagamento: ", error);
-    res.status(200);
+    return res.status(200).send("ok");
   }
 });
 
 async function sendEmail(payment) {
   try {
-    const { status, externalReference, billingType } = payment;
+    const { status, externalReference, billingType, id } = payment;
 
     if (status !== "RECEIVED") return;
     if (!externalReference) return;
